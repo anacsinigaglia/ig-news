@@ -1,14 +1,14 @@
-import { query as q } from 'faunadb';
+import { query as q } from "faunadb";
 
-import NextAuth from 'next-auth';
-import GitHubProvider from 'next-auth/providers/github';
+import NextAuth from "next-auth";
+import GitHubProvider from "next-auth/providers/github";
 
-import { fauna } from '../../../services/fauna';
+import { fauna } from "../../../services/fauna";
 import {
   createInCollection,
   emailIndex,
   getByIndex,
-} from '../../../utils/faunaUtils';
+} from "../../../utils/faunaUtils";
 
 export default NextAuth({
   providers: [
@@ -17,7 +17,7 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: 'read:user',
+          scope: "read:user",
         },
       },
     }),
