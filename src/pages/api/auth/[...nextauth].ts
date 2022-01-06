@@ -35,7 +35,7 @@ export default NextAuth({
               )
             ),
             createInCollection({ data: { email } }), //if condition is true
-            getByIndex(email) //else
+            getByIndex(emailIndex, email) //else
           )
         );
         return true;

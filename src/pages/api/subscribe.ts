@@ -1,3 +1,4 @@
+import { emailIndex } from "./../../utils/faunaUtils";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { query as q } from "faunadb";
@@ -19,7 +20,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const session = await getSession({ req });
 
-    const user = await fauna.query<UserType>(getByIndex(session.user.email));
+    const user = await fauna.query<UserType>(
+      getByIndex(emailIndex, session.user.email)
+    );
 
     let customerId = user.data.stripe_customer_id;
 

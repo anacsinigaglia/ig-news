@@ -1,3 +1,4 @@
+import { getByIndex, subscriptionByIdIndex } from "./../../utils/faunaUtils";
 import { query as q } from "faunadb";
 import { fauna } from "../../services/fauna";
 import { stripe } from "../../services/stripe";
@@ -9,7 +10,8 @@ import {
 
 export async function saveSubscription(
   subscriptionId: string,
-  customerId: string
+  customerId: string,
+  createAction = false
 ) {
   const userRef = await fauna.query(
     q.Select("ref", q.Get(q.Match(q.Index(stripeIdIndex), customerId)))
@@ -24,7 +26,20 @@ export async function saveSubscription(
     price_id: subscription.items.data[0].price.id,
   };
 
-  await fauna.query(
-    createInCollection({ data: subscriptionData }, subscriptionCollection)
-  );
+  if (createAction) {
+    await fauna.query(
+      createInCollection({ data: subscriptionData }, subscriptionCollection)
+    );
+  } else {
+    await fauna.query(
+      q.Replace(
+        //replace all data instead of only updating a specific prop
+        q.Select(
+          "ref",
+          getByIndex(subscriptionByIdIndex, null, subscriptionId)
+        ),
+        { data: subscriptionData }
+      )
+    );
+  }
 }
