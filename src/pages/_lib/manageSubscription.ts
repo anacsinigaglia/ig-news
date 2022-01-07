@@ -14,7 +14,7 @@ export async function saveSubscription(
   createAction = false
 ) {
   const userRef = await fauna.query(
-    q.Select("ref", q.Get(q.Match(q.Index(stripeIdIndex), customerId)))
+    q.Select("ref", getByIndex(stripeIdIndex, undefined, customerId))
   );
 
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -36,7 +36,7 @@ export async function saveSubscription(
         //replace all data instead of only updating a specific prop
         q.Select(
           "ref",
-          getByIndex(subscriptionByIdIndex, null, subscriptionId)
+          getByIndex(subscriptionByIdIndex, undefined, subscriptionId)
         ),
         { data: subscriptionData }
       )

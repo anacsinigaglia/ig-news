@@ -19,8 +19,8 @@ export const config = {
 };
 
 const relevantEvents = new Set([
-  "checkout.session.completed",
-  "checkout.subscription.updated", //it doesnt need created, cus the website is the only way to subscribe
+  "checkout.session.completed", //it doesnt need created, cus the website is the only way to subscribe
+  "checkout.subscription.updated",
   "checkout.subscription.deleted",
 ]);
 
@@ -49,7 +49,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           case "checkout.subscription.updated":
           case "checkout.subscription.deleted":
             const subscription = event.data.object as Stripe.Subscription;
-
             await saveSubscription(
               subscription.id,
               subscription.customer.toString(),
@@ -60,7 +59,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           case "checkout.session.completed":
             const checkoutSession = event.data
               .object as Stripe.Checkout.Session;
-
             await saveSubscription(
               checkoutSession.subscription.toString(),
               checkoutSession.customer.toString(),
@@ -76,7 +74,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
 
-    res.json({ ok: true }); //200 status is implicit due to json response
+    res.json({ received: true }); //200 status is implicit due to json response
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method not allowed");

@@ -54,9 +54,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       cancel_url: process.env.STRIPE_CANCEL_URL,
     });
 
-    return res.status(200).json({ sessionId: stripeCheckoutSession.id });
+    return res.json({ sessionId: stripeCheckoutSession.id });
   } else {
     res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(405).end(`Method ${req.method} not allowed!`);
   }
 };
